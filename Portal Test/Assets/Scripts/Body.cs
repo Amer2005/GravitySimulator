@@ -45,6 +45,7 @@ public class Body : MonoBehaviour
                 velocityNow += acceleration * timeStep;
             }
         }
+        StartVelocity = velocityNow;
     }
 
     public void UpdatePositon(float timeStep)
