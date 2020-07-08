@@ -12,20 +12,30 @@ public class DrawOrbit : MonoBehaviour
 
     const int numberOfTurns = 10000;
 
-    const int howOftenToPlaceDot = 50;
+    const int howOftenToPlaceDot = 1;
+
+    float nextActionTime = 0f;
+    float period = 1f;
+
+    bool started = false;
 
     void Start()
     {
         RenderPath();
     }
 
+    public void StartButton()
+    {
+        started = !started;
+    }
+
     public void RenderPath()
     {
-        ClearDots();
-
         var GameObjectBodies = GameObject.FindGameObjectsWithTag("body");
 
         var bodies = new Body[GameObjectBodies.Length];
+
+        var newPos = new Transform[GameObjectBodies.Length];
 
         for (int i = 0; i < GameObjectBodies.Length; i++)
         {
@@ -74,16 +84,18 @@ public class DrawOrbit : MonoBehaviour
 
                 if (i % howOftenToPlaceDot == 0)
                 {
-                    var dot = Instantiate(Dot, virtualBodies[j].rb.position, new Quaternion());
-
-                    dot.transform.parent = Dots.transform;
-
-                    var dotMesh = dot.GetComponent<MeshRenderer>();
-
-                    dotMesh.material = GameObjectBodies[j].GetComponent<MeshRenderer>().material;
+                    Points[i / howOftenToPlaceDot, j] = virtualBodies[j].rb.position;
                 }
-
-                Points[i, j] = virtualBodies[j].rb.position;
+            }
+        }
+        for (int j = 0; j < VirtualGameObjectBodies.Length; j++)
+        {
+            for (int i = howOftenToPlaceDot; i < numberOfTurns; i++)
+            {
+                if (i % howOftenToPlaceDot == 0)
+                {
+                    Debug.DrawLine(Points[i / howOftenToPlaceDot - 1, j], Points[i / howOftenToPlaceDot, j], Color.white, 1, false);
+                }
             }
         }
 
@@ -91,6 +103,7 @@ public class DrawOrbit : MonoBehaviour
         {
             Destroy(VirtualGameObjectBodies[i]);
         }
+
     }
 
     public void ClearDots()
@@ -104,8 +117,15 @@ public class DrawOrbit : MonoBehaviour
     }
 
     // Update is called once per frame
-    void Update()
+    void FixedUpdate()
     {
-        
+        if(Time.time > nextActionTime)
+        {
+            nextActionTime += period;
+            if (!started)
+            {
+                RenderPath();
+            }
+        }
     }
 }
