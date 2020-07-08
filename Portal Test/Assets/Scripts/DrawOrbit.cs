@@ -7,8 +7,8 @@ public class DrawOrbit : MonoBehaviour
     // Start is called before the first frame update
 
     public GameObject Drawer;
-    public GameObject Dot;
-    public GameObject Dots;
+
+    public GameObject Middle;
 
     const int numberOfTurns = 10000;
 
@@ -16,6 +16,8 @@ public class DrawOrbit : MonoBehaviour
 
     float nextActionTime = 0f;
     float period = 1f;
+
+    int middle;
 
     bool started = false;
 
@@ -51,6 +53,10 @@ public class DrawOrbit : MonoBehaviour
         for (int i = 0; i < VirtualGameObjectBodies.Length; i++)
         {
             VirtualGameObjectBodies[i] = Instantiate(Drawer, GameObjectBodies[i].transform.position, new Quaternion());
+            if (GameObjectBodies[i] == Middle)
+            {
+                middle = i;
+            }
         }
 
         var virtualBodies = new Body[VirtualGameObjectBodies.Length];
@@ -80,7 +86,7 @@ public class DrawOrbit : MonoBehaviour
 
             for (int j = 0; j < virtualBodies.Length; j++)
             {
-                virtualBodies[j].UpdatePositon(Universe.physicsTimeStep);
+                virtualBodies[j].UpdatePositon(virtualBodies[middle].rb.position, Universe.physicsTimeStep);
 
                 if (i % howOftenToPlaceDot == 0)
                 {
@@ -94,7 +100,8 @@ public class DrawOrbit : MonoBehaviour
             {
                 if (i % howOftenToPlaceDot == 0)
                 {
-                    Debug.DrawLine(Points[i / howOftenToPlaceDot - 1, j], Points[i / howOftenToPlaceDot, j], Color.white, 1, false);
+                    Material material = GameObjectBodies[j].GetComponent<MeshRenderer>().material;
+                    Debug.DrawLine(Points[i / howOftenToPlaceDot - 1, j], Points[i / howOftenToPlaceDot, j], material.color, period, false);
                 }
             }
         }

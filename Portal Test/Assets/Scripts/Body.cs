@@ -13,10 +13,13 @@ public class Body : MonoBehaviour
     BodyController bodyController;
     public SphereCollider col;
 
+    bool center;
+
     // Start is called before the first frame update
 
     private void Awake()
     {
+        center = true;
         rb = GetComponent<Rigidbody>();
         var bodyControllerGameObject = GameObject.FindGameObjectWithTag("bodyController");
         bodyController = bodyControllerGameObject.GetComponent<BodyController>();
@@ -48,9 +51,10 @@ public class Body : MonoBehaviour
         StartVelocity = velocityNow;
     }
 
-    public void UpdatePositon(float timeStep)
+    public void UpdatePositon(Vector3 middle, float timeStep)
     {
         rb.MovePosition(rb.position + velocityNow * timeStep);
+        if(center) rb.position = rb.position - middle;
     }
 
     private void FixedUpdate()

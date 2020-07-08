@@ -11,6 +11,8 @@ public class BodyController : MonoBehaviour
 
     public bool started;
 
+    public GameObject Middle;
+
     public Text ButtonText;
 
     void Start()
@@ -55,7 +57,7 @@ public class BodyController : MonoBehaviour
 
             for (int i = 0; i < bodies.Length; i++)
             {
-                bodies[i].UpdatePositon(Universe.physicsTimeStep);
+                bodies[i].UpdatePositon(Middle.transform.position, Universe.physicsTimeStep);
             }
         }
     }
