@@ -6,6 +6,7 @@ TagManager:
   tags:
   - body
   - bodyController
+  - Dot
   layers:
   - Default
   - TransparentFX

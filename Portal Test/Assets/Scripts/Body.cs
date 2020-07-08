@@ -9,9 +9,9 @@ public class Body : MonoBehaviour
     float lastRadius;
     public Vector3 StartVelocity;
     Vector3 velocityNow;
-    Rigidbody rb;
+    public Rigidbody rb;
     BodyController bodyController;
-    SphereCollider col;
+    public SphereCollider col;
 
     // Start is called before the first frame update
 
